@@ -1,0 +1,14 @@
+{{#each details as |result|}}
+  {{#if result.name}}
+    <span class="integration-summary-tag integration-background-color integration-border-color">
+       <span class="acronym integration-text-bold-color">{{block.acronym}}</span>
+       <span class="integration-text-color">Hostname: {{result.name}}</span>
+    </span>
+  {{/if}}
+  {{#if result.subnet_name}}
+    <span class="integration-summary-tag integration-background-color integration-border-color">
+       <span class="acronym integration-text-bold-color">{{block.acronym}}</span>
+       <span class="integration-text-color">Subnet Name: {{result.subnet_name}}</span>
+    </span>
+  {{/if}}
+{{/each}}

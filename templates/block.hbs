@@ -1,0 +1,43 @@
+{{#if details}}
+  <h1 class="p-title">
+      {{fa-icon "info" fixedWidth=true}} Lookup Results
+  </h1>
+{{/if}}
+{{#each details as |result|}}
+    {{#if result.site_name}}
+      <div>
+          <span class="p-key">Site Name: </span>
+          <span class="p-value">{{result.site_name}}</span>
+      </div>
+    {{/if}}
+    {{#if result.name}}
+      <div>
+          <span class="p-key">Host Name: </span>
+          <span class="p-value">{{result.name}}</span>
+      </div>
+    {{/if}}
+    {{#if result.mac_addr}}
+      <div>
+          <span class="p-key">MAC Address: </span>
+          <span class="p-value">{{result.mac_addr}}</span>
+      </div>
+    {{/if}}
+    {{#if result.subnet_name}}
+      <div>
+          <span class="p-key">Subnet Name: </span>
+          <span class="p-value">{{result.subnet_name}}</span>
+      </div>
+    {{/if}}
+    {{#if result.parent_subnet_start_hostaddr}}
+      <div>
+          <span class="p-key">Subnet Start Address: </span>
+          <span class="p-value">{{result.parent_subnet_start_hostaddr}}</span>
+      </div>
+    {{/if}}
+    {{#if result.parent_subnet_end_hostaddr}}
+      <div>
+          <span class="p-key">Subnet End Address: </span>
+          <span class="p-value">{{result.parent_subnet_end_hostaddr}}</span>
+      </div>
+    {{/if}}
+{{/each}}
