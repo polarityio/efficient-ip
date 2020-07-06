@@ -2,9 +2,14 @@
 
 The efficientiP SOLIDserver integration searches SOLIDserver RESTFul API for metadata associated with observed IPv4 addresses.
 
+
 To learn more about efficientiP, please visit the [official website](https://www.efficientip.com/).
 
-> Note that this integration is currently in Beta.
+Check out the integration below: 
+
+| ![image](https://user-images.githubusercontent.com/22529325/86610974-0a6d3300-bf7c-11ea-850c-bb3ebdceb403.png) |
+|---|
+|EfficientIP Example|
 
 ## efficientiP Integration Options
 
