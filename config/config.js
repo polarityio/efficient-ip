@@ -3,7 +3,7 @@ module.exports = {
   acronym: 'EIP',
   description: 'Searches EfficientIP SOLIDserver for metadata regarding observed IPv4 addresses',
   entityTypes: ['ipv4'],
-  logging: { level: 'trace' },
+  logging: { level: 'info' },
   block: {
     component: {
       file: './components/block.js'
