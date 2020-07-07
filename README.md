@@ -1,24 +1,41 @@
-# Polarity efficientiP SOLIDserver Integration
+# Polarity EfficientIP SOLIDserver Integration
 
-The efficientiP SOLIDserver integration searches SOLIDserver RESTFul API for metadata associated with observed IPv4 addresses.
+The EfficientIP SOLIDserver integration searches SOLIDserver RESTFul API for metadata associated with observed IPv4 addresses.
 
-To learn more about efficientiP, please visit the [official website](https://www.efficientip.com/).
 
-> Note that this integration is currently in Beta.
+To learn more about EfficientIP, please visit the [official website](https://www.efficientip.com/).
 
-## efficientiP Integration Options
+Check out the integration below: 
 
-### efficientiP Server URL
+| <img src="./assets/overlay.png" width="50%"> |
+|---|
+|EfficientIP Example|
 
-The URL for your efficientiP server to include the schema (i.e., https://)
+## EfficientIP Integration Options
 
-### efficientiP Username
+### EfficientIP Server URL
 
-A valid username for your efficientiP instance.
+The URL for your EfficientIP server to include the schema (i.e., https://)
 
-### efficientiP Password
+### EfficientIP Username
 
-A valid password tied to the specified efficientiP username.
+A valid username for your EfficientIP instance.
+
+### EfficientIP Password
+
+A valid password tied to the specified EfficientIP username.
+
+### Only search private RFC 1918 Addresses
+     
+If checked, the integration will only search private RFC 1918 IP addresses.
+
+### Ignored IP Addresses
+
+A comma delimited list of IP addresses that will never be searched in EfficientIP
+
+### Ignored IP Addresses Regex
+
+IP Addresses that match the given regex will not be searched in EfficientIP (if blank, no IPs will be ignored)
 
 ## Polarity
 

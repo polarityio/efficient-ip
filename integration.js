@@ -1,14 +1,14 @@
-const request = require("request");
-const async = require("async");
-const fs = require("fs");
-const _ = require("lodash");
-const config = require("./config/config");
+const request = require('request');
+const async = require('async');
+const fs = require('fs');
+const _ = require('lodash');
+const config = require('./config/config');
 
 let Logger;
 let requestWithDefaults;
-let previousIpRegexAsString = "";
+let previousIpRegexAsString = '';
 let ipBlocklistRegex = null;
-const IGNORED_IPS = new Set(["127.0.0.1", "255.255.255.255", "0.0.0.0"]);
+const IGNORED_IPS = new Set(['127.0.0.1', '255.255.255.255', '0.0.0.0']);
 
 const MAX_PARALLEL_LOOKUPS = 10;
 
@@ -22,36 +22,29 @@ function startup(logger) {
   let defaults = {};
   Logger = logger;
 
-  const {
-    cert,
-    key,
-    passphrase,
-    ca,
-    proxy,
-    rejectUnauthorized
-  } = config.request;
+  const { cert, key, passphrase, ca, proxy, rejectUnauthorized } = config.request;
 
-  if (typeof cert === "string" && cert.length > 0) {
+  if (typeof cert === 'string' && cert.length > 0) {
     defaults.cert = fs.readFileSync(cert);
   }
 
-  if (typeof key === "string" && key.length > 0) {
+  if (typeof key === 'string' && key.length > 0) {
     defaults.key = fs.readFileSync(key);
   }
 
-  if (typeof passphrase === "string" && passphrase.length > 0) {
+  if (typeof passphrase === 'string' && passphrase.length > 0) {
     defaults.passphrase = passphrase;
   }
 
-  if (typeof ca === "string" && ca.length > 0) {
+  if (typeof ca === 'string' && ca.length > 0) {
     defaults.ca = fs.readFileSync(ca);
   }
 
-  if (typeof proxy === "string" && proxy.length > 0) {
+  if (typeof proxy === 'string' && proxy.length > 0) {
     defaults.proxy = proxy;
   }
 
-  if (typeof rejectUnauthorized === "boolean") {
+  if (typeof rejectUnauthorized === 'boolean') {
     defaults.rejectUnauthorized = rejectUnauthorized;
   }
 
@@ -59,42 +52,32 @@ function startup(logger) {
 }
 
 function _setupRegexBlocklists(options) {
-  if (
-    options.ipBlocklistRegex !== previousIpRegexAsString &&
-    options.ipBlocklistRegex.length === 0
-  ) {
-    Logger.debug("Removing IP blocklist Regex Filtering");
-    previousIpRegexAsString = "";
+  if (options.ipBlocklistRegex !== previousIpRegexAsString && options.ipBlocklistRegex.length === 0) {
+    Logger.debug('Removing IP blocklist Regex Filtering');
+    previousIpRegexAsString = '';
     ipBlocklistRegex = null;
   } else {
     if (options.ipBlocklistRegex !== previousIpRegexAsString) {
       previousIpRegexAsString = options.ipBlocklistRegex;
-      Logger.debug(
-        { ipBlocklistRegex: previousIpRegexAsString },
-        "Modifying IP blocklist Regex"
-      );
-      ipBlocklistRegex = new RegExp(options.ipBlocklistRegex, "i");
+      Logger.debug({ ipBlocklistRegex: previousIpRegexAsString }, 'Modifying IP blocklist Regex');
+      ipBlocklistRegex = new RegExp(options.ipBlocklistRegex, 'i');
     }
   }
 }
 
 function _isEntityblocklisted(entity, { blocklist }) {
-  Logger.trace({ blocklist }, "blocklist Values");
+  Logger.trace({ blocklist }, 'blocklist Values');
 
   const entityIsblocklisted = _.includes(blocklist, entity.value.toLowerCase());
 
-  const ipIsblocklisted =
-    entity.isIP &&
-    ipBlocklistRegex !== null &&
-    ipBlocklistRegex.test(entity.value);
-  if (ipIsblocklisted)
-    Logger.debug({ ip: entity.value }, "Blocked BlockListed IP Lookup");
+  const ipIsblocklisted = entity.isIP && ipBlocklistRegex !== null && ipBlocklistRegex.test(entity.value);
+  if (ipIsblocklisted) Logger.debug({ ip: entity.value }, 'Blocked BlockListed IP Lookup');
 
   return entityIsblocklisted || ipIsblocklisted;
 }
 
-function _isInvalidEntity(entity) {
-  return entity.isIPv4 && IGNORED_IPS.has(entity.value);
+function _isInvalidEntity(entity, options) {
+  return (entity.isIPv4 && IGNORED_IPS.has(entity.value)) || (options.privateIpOnly && !entity.isPrivateIP);
 }
 
 function doLookup(entities, options, cb) {
@@ -104,33 +87,35 @@ function doLookup(entities, options, cb) {
   Logger.debug(entities);
 
   _setupRegexBlocklists(options);
+  const url = options.url.endsWith('/') ? options.url : `${options.url}/`;
 
-  entities.forEach(entity => {
-    if (!_isInvalidEntity(entity) && !_isEntityblocklisted(entity, options)) {
+  entities.forEach((entity) => {
+    if (!_isInvalidEntity(entity, options) && !_isEntityblocklisted(entity, options)) {
       let requestOptions = {
-        method: "GET",
-        uri: `${options.url}/rest/ip_address_list?WHERE=hostaddr%20like%20%27${entity.value}%27`,
+        method: 'GET',
+        uri: `${url}/rest/ip_address_list`,
+        qs: {
+          WHERE: `hostaddr like '${entity.value}'`
+        },
         json: true
       };
 
       if (
-        typeof options.username === "string" &&
+        typeof options.username === 'string' &&
         options.username.length > 0 &&
-        typeof options.password === "string" &&
+        typeof options.password === 'string' &&
         options.password.length > 0
       ) {
         requestOptions.auth = {
           user: options.username,
           pass: options.password
         };
-        // requestOptions.headers.Authorization =
-        //   'Basic ' + Buffer.from(`${options.username}:${options.password}`).toString('base64');
       }
 
-      Logger.trace({ uri: requestOptions }, "Request URI");
+      Logger.trace({ uri: requestOptions }, 'Request URI');
 
-      tasks.push(function(done) {
-        requestWithDefaults(requestOptions, function(error, res, body) {
+      tasks.push(function (done) {
+        requestWithDefaults(requestOptions, function (error, res, body) {
           let processedResult = handleRestError(error, entity, res, body);
 
           if (processedResult.error) {
@@ -146,15 +131,13 @@ function doLookup(entities, options, cb) {
 
   async.parallelLimit(tasks, MAX_PARALLEL_LOOKUPS, (err, results) => {
     if (err) {
-      Logger.error({ err: err }, "Error");
+      Logger.error({ err: err }, 'Error');
       cb(err);
       return;
     }
 
-    results.forEach(result => {
-      if (
-        result.body === null || _.isEmpty(result.body)
-      ) {
+    results.forEach((result) => {
+      if (result.body === null || _.isEmpty(result.body)) {
         lookupResults.push({
           entity: result.entity,
           data: null
@@ -170,7 +153,7 @@ function doLookup(entities, options, cb) {
       }
     });
 
-    Logger.debug({ lookupResults }, "Results");
+    Logger.debug({ lookupResults }, 'Results');
     cb(null, lookupResults);
   });
 }
@@ -181,7 +164,7 @@ function handleRestError(error, entity, res, body) {
   if (error) {
     return {
       error: error,
-      detail: "HTTP Request Error"
+      detail: 'HTTP Request Error'
     };
   }
 
@@ -208,7 +191,7 @@ function handleRestError(error, entity, res, body) {
     result = {
       entity: entity,
       error: body,
-      detail: `Unexpected error occured, please check credentials or reach out to your Polaity Admin`
+      detail: `Unexpected error occurred, please check credentials or reach out to your Polarity Admin`
     };
   }
   return result;
