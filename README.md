@@ -7,7 +7,7 @@ To learn more about EfficientIP, please visit the [official website](https://www
 
 Check out the integration below: 
 
-| ![image](https://user-images.githubusercontent.com/22529325/86610974-0a6d3300-bf7c-11ea-850c-bb3ebdceb403.png) |
+| <img src="./assets/overlay.png" width="50%"> |
 |---|
 |EfficientIP Example|
 
