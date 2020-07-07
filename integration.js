@@ -76,8 +76,8 @@ function _isEntityblocklisted(entity, { blocklist }) {
   return entityIsblocklisted || ipIsblocklisted;
 }
 
-function _isInvalidEntity(entity) {
-  return entity.isIPv4 && IGNORED_IPS.has(entity.value);
+function _isInvalidEntity(entity, options) {
+  return (entity.isIPv4 && IGNORED_IPS.has(entity.value)) || (options.privateIpOnly && !entity.isPrivateIP);
 }
 
 function doLookup(entities, options, cb) {
@@ -87,12 +87,13 @@ function doLookup(entities, options, cb) {
   Logger.debug(entities);
 
   _setupRegexBlocklists(options);
+  const url = options.url.endsWith('/') ? options.url : `${options.url}/`;
 
   entities.forEach((entity) => {
-    if (!_isInvalidEntity(entity) && !_isEntityblocklisted(entity, options)) {
+    if (!_isInvalidEntity(entity, options) && !_isEntityblocklisted(entity, options)) {
       let requestOptions = {
         method: 'GET',
-        uri: `${options.url}/rest/ip_address_list`,
+        uri: `${url}/rest/ip_address_list`,
         qs: {
           WHERE: `hostaddr like '${entity.value}'`
         },

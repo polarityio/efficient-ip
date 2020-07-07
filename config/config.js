@@ -1,7 +1,7 @@
 module.exports = {
-  name: 'efficientiP SOLIDserver',
+  name: 'EfficientIP SOLIDserver',
   acronym: 'EIP',
-  description: 'Searches efficientiP for metadata regarding observed IPv4 addresses',
+  description: 'Searches EfficientIP SOLIDserver for metadata regarding observed IPv4 addresses',
   entityTypes: ['ipv4'],
   logging: { level: 'trace' },
   block: {
@@ -46,9 +46,8 @@ module.exports = {
   options: [
     {
       key: 'url',
-      name: 'efficientiP Server URL',
-      description:
-        'The URL for your FIR instance to include the schema (i.e., https://)',
+      name: 'EfficientIP SOLIDServer URL',
+      description: 'The URL for your EfficientIP SOLIDserver instance to include the schema (i.e., https://)',
       type: 'text',
       default: '',
       userCanEdit: false,
@@ -56,9 +55,8 @@ module.exports = {
     },
     {
       key: 'username',
-      name: 'efficientiP username',
-      description:
-        'The username to authenticate to the efficientiP server',
+      name: 'EfficientIP Username',
+      description: 'The username to authenticate as on your EfficientIP SOLIDserver',
       default: '',
       type: 'text',
       userCanEdit: true,
@@ -66,18 +64,26 @@ module.exports = {
     },
     {
       key: 'password',
-      name: 'efficientiP password',
-      description:
-        'The password to authenticate to the efficientiP server',
+      name: 'EfficientIP password',
+      description: 'The password to authenticate to the EfficientIP SOLIDserver',
       default: '',
       type: 'password',
       userCanEdit: true,
       adminOnly: false
     },
     {
+      key: 'privateIpOnly',
+      name: 'Only search private RFC 1918 Addresses',
+      description: 'If checked, the integration will only search private RFC 1918 IP addresses.',
+      default: false,
+      type: 'boolean',
+      userCanEdit: false,
+      adminOnly: true
+    },
+    {
       key: 'blocklist',
-      name: 'Entity Blocklist IPs',
-      description: 'A list of entities that will never be seached in efficientIp',
+      name: 'Ignored IP Addresses',
+      description: 'A comma delimited list of IP addresses that will never be searched in EfficientIP',
       default: '',
       type: 'text',
       userCanEdit: false,
@@ -85,9 +91,8 @@ module.exports = {
     },
     {
       key: 'ipBlocklistRegex',
-      name: 'IP Blocklist Regex',
-      description:
-        'A list of regexes that will never be used to never search entites in efficientIP',
+      name: 'Ignored IP Addresses Regex',
+      description: 'IP Addresses that match the given regex will not be searched in EfficientIP (if blank, no IPs will be ignored)',
       default: '',
       type: 'text',
       userCanEdit: false,
