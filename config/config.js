@@ -3,6 +3,7 @@ module.exports = {
   acronym: 'EIP',
   description: 'Searches EfficientIP SOLIDserver for metadata regarding observed IPv4 addresses',
   entityTypes: ['ipv4'],
+  defaultColor: 'light-blue',
   logging: { level: 'info' },
   block: {
     component: {
@@ -92,7 +93,8 @@ module.exports = {
     {
       key: 'ipBlocklistRegex',
       name: 'Ignored IP Addresses Regex',
-      description: 'IP Addresses that match the given regex will not be searched in EfficientIP (if blank, no IPs will be ignored)',
+      description:
+        'IP Addresses that match the given regex will not be searched in EfficientIP (if blank, no IPs will be ignored)',
       default: '',
       type: 'text',
       userCanEdit: false,
