@@ -1,4 +1,5 @@
 {
+  "polarityIntegrationUuid": "dfc5bf20-cce1-11ed-aeee-075d3490155d",
   "name": "EfficientIP SOLIDserver",
   "acronym": "EIP",
   "description": "Searches EfficientIP SOLIDserver for metadata regarding observed IPv4 addresses",
