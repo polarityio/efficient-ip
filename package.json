@@ -1,6 +1,6 @@
 {
   "name": "efficientip",
-  "version": "3.1.4-beta",
+  "version": "3.1.5",
   "main": "./integration.js",
   "private": true,
   "dependencies": {
