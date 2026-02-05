@@ -1,0 +1,31 @@
+{
+  "root": {
+    "path": "",
+    "on_null": "return_empty"
+  },
+  "pipeline": [
+    {
+      "op": "copy",
+      "from": "[].name",
+      "to": "reduced_results.hostname"
+    },
+    {
+      "op": "copy",
+      "from": "[].site_name",
+      "to": "reduced_results.site"
+    },
+    {
+      "op": "copy",
+      "from": "[].subnet_name",
+      "to": "reduced_results.subnet"
+    },
+    {
+      "op": "prune",
+      "strategy": "empty_values",
+      "target": "reduced_results"
+    }
+  ],
+  "output": {
+    "result": "$working.reduced_results"
+  }
+}

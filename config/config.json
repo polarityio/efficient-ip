@@ -3,7 +3,9 @@
   "name": "EfficientIP SOLIDserver",
   "acronym": "EIP",
   "description": "Searches EfficientIP SOLIDserver for metadata regarding observed IPv4 addresses",
-  "entityTypes": ["IPv4"],
+  "entityTypes": [
+    "IPv4"
+  ],
   "defaultColor": "light-blue",
   "logging": {
     "level": "info"
@@ -86,5 +88,10 @@
       "userCanEdit": false,
       "adminOnly": false
     }
-  ]
+  ],
+  "reducer": {
+    "details": {
+      "file": "./reducers/details.json"
+    }
+  }
 }
